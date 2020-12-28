@@ -43,6 +43,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		73209BA82599FB1A00149CCC /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				733F643C2599B9CD00804A0A /* UIView+.swift */,
+				73209BA52599F22B00149CCC /* UIColor+.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		73209BA92599FB3400149CCC /* App */ = {
+			isa = PBXGroup;
+			children = (
+				733F64212599B61F00804A0A /* AppDelegate.swift */,
+				733F64232599B61F00804A0A /* SceneDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		73209BAB2599FB4000149CCC /* Master-Detail */ = {
+			isa = PBXGroup;
+			children = (
+				733F64402599BB7400804A0A /* MasterViewController.swift */,
+				733F64392599B99600804A0A /* DetailViewController.swift */,
+			);
+			path = "Master-Detail";
+			sourceTree = "<group>";
+		};
 		733F64152599B61F00804A0A = {
 			isa = PBXGroup;
 			children = (
@@ -62,13 +89,10 @@
 		733F64202599B61F00804A0A /* Friendly */ = {
 			isa = PBXGroup;
 			children = (
-				733F64212599B61F00804A0A /* AppDelegate.swift */,
-				733F64232599B61F00804A0A /* SceneDelegate.swift */,
+				73209BA92599FB3400149CCC /* App */,
 				73209BA12599F07A00149CCC /* SignupController.swift */,
-				73209BA52599F22B00149CCC /* UIColor+.swift */,
-				733F64392599B99600804A0A /* DetailViewController.swift */,
-				733F64402599BB7400804A0A /* MasterViewController.swift */,
-				733F643C2599B9CD00804A0A /* UIView+.swift */,
+				73209BAB2599FB4000149CCC /* Master-Detail */,
+				73209BA82599FB1A00149CCC /* Extensions */,
 				733F642A2599B62200804A0A /* Assets.xcassets */,
 				733F642C2599B62200804A0A /* LaunchScreen.storyboard */,
 				733F642F2599B62200804A0A /* Info.plist */,
