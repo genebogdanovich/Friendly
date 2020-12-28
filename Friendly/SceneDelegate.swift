@@ -33,7 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             splitViewController.show(.primary)
         }
         
-        window?.rootViewController = splitViewController
+        window?.rootViewController = SignupController()
         window?.makeKeyAndVisible()
     }
 }

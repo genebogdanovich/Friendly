@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		73209BA22599F07A00149CCC /* SignupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73209BA12599F07A00149CCC /* SignupController.swift */; };
+		73209BA62599F22B00149CCC /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73209BA52599F22B00149CCC /* UIColor+.swift */; };
 		733F64222599B61F00804A0A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733F64212599B61F00804A0A /* AppDelegate.swift */; };
 		733F64242599B61F00804A0A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733F64232599B61F00804A0A /* SceneDelegate.swift */; };
 		733F642B2599B62200804A0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 733F642A2599B62200804A0A /* Assets.xcassets */; };
@@ -17,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		73209BA12599F07A00149CCC /* SignupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupController.swift; sourceTree = "<group>"; };
+		73209BA52599F22B00149CCC /* UIColor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
 		733F641E2599B61F00804A0A /* Friendly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Friendly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		733F64212599B61F00804A0A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		733F64232599B61F00804A0A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -60,6 +64,8 @@
 			children = (
 				733F64212599B61F00804A0A /* AppDelegate.swift */,
 				733F64232599B61F00804A0A /* SceneDelegate.swift */,
+				73209BA12599F07A00149CCC /* SignupController.swift */,
+				73209BA52599F22B00149CCC /* UIColor+.swift */,
 				733F64392599B99600804A0A /* DetailViewController.swift */,
 				733F64402599BB7400804A0A /* MasterViewController.swift */,
 				733F643C2599B9CD00804A0A /* UIView+.swift */,
@@ -142,8 +148,10 @@
 				733F64222599B61F00804A0A /* AppDelegate.swift in Sources */,
 				733F64412599BB7400804A0A /* MasterViewController.swift in Sources */,
 				733F64242599B61F00804A0A /* SceneDelegate.swift in Sources */,
+				73209BA22599F07A00149CCC /* SignupController.swift in Sources */,
 				733F643A2599B99600804A0A /* DetailViewController.swift in Sources */,
 				733F643D2599B9CD00804A0A /* UIView+.swift in Sources */,
+				73209BA62599F22B00149CCC /* UIColor+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
