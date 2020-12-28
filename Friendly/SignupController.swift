@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class SignupController: UIViewController {
     
@@ -108,7 +109,19 @@ class SignupController: UIViewController {
     }
     
     @objc fileprivate func handleSignup() {
+        // FIXME: Refactor this out.
+        guard let email = emailTextField.text, email.count > 0, isValidEmail(email) else { return }
+        guard let username = usernameTextField.text, username.count > 0 else { return }
+        guard let password = passwordTextField.text, password.count > 0 else { return }
         
+        Auth.auth().createUser(withEmail: email, password: password, completion: { result, error in
+            if let error = error {
+                print("Failed to create user with error: \(error)")
+                return
+            }
+            print("Successfully created user.")
+            
+        })
     }
     
     @objc fileprivate func handleAlreadyHaveAccount() {
