@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class NewContactController: UIViewController {
     
@@ -42,6 +43,7 @@ class NewContactController: UIViewController {
     
     let emailTextField: UITextField = {
         let view = UITextField()
+        view.autocapitalizationType = .none
         view.placeholder = "Email"
         view.keyboardType = .emailAddress
         view.backgroundColor = UIColor(white: 0, alpha: 0.03)
@@ -132,7 +134,69 @@ class NewContactController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    
+    
     @objc fileprivate func handleDone() {
+        guard let firstName = firstNameTextField.text, firstName.count > 0 else { return }
+        guard let lastName = lastNameTextField.text, lastName.count > 0 else { return }
+        guard let emailAddress = emailTextField.text, emailAddress.count > 0 else { return }
+        guard let phoneNumber = phoneNumberTextField.text, phoneNumber.count > 0 else { return }
+        
+        guard let image = addPhotoButton.imageView?.image else { return }
+        guard let uploadData = image.jpegData(compressionQuality: 0.3) else { return }
+        let imageFileName = UUID().uuidString
+        
+        // Root reference
+        let storageReference = Storage.storage().reference()
+        // Reference to file
+        let imageReference = storageReference.child("contact_avatars").child(imageFileName)
+        
+        imageReference.putData(uploadData, metadata: nil, completion: { metadata, error in
+            if let error = error {
+                print("Failed to upload contact avatar: \(error)")
+            }
+            
+            imageReference.downloadURL(completion: { url, error in
+                guard let downloadURL = url else { return }
+                guard let uid = Auth.auth().currentUser?.uid else { return }
+                
+                let values = [
+                    "firstName": firstName,
+                    "lastName": lastName,
+                    "emailAddress": emailAddress,
+                    "phoneNumber": phoneNumber,
+                    "avatarURL": downloadURL.absoluteString,
+                    "avatarImageWidth": image.size.width,
+                    "avatarImageHeight": image.size.height,
+                    "creationDate": Date().timeIntervalSince1970,
+                    
+                ] as [String: Any]
+                
+                let contactReference = Database
+                    .database(url: FirebaseAPICredentials.dbURLString)
+                    .reference()
+                    .child("contacts")
+                    .child(uid)
+                
+                let reference = contactReference.childByAutoId()
+                
+                reference.updateChildValues(values) { error, reference in
+                    if let error = error {
+                        print("Failed to save contact to DB: \(error)")
+                        return
+                    }
+                    print("Successfully saved contact to DB.")
+                    self.dismiss(animated: true, completion: nil)
+                    
+                }
+                
+                
+            })
+            
+        })
+        
+        
+        
         dismiss(animated: true, completion: nil)
     }
     
