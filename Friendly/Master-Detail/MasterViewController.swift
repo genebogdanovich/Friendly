@@ -13,12 +13,14 @@ private let cellID = "ITEM_CELL"
 class MasterViewController: UITableViewController {
     
     weak var delegate: ItemSelectionDelegate?
-    var dates = [Date]()
+    var contacts = [Contact]()
+    
+    // MARK: viewDidLoad
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Contacts"
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
+        tableView.register(ContactCell.self, forCellReuseIdentifier: cellID)
         configureBarButtonItems()
         
         // Show login screen if the user is not logged in.
@@ -34,6 +36,8 @@ class MasterViewController: UITableViewController {
         } else {
             print("User is logged in.")
         }
+        
+        fetchContacts()
         
     }
     
@@ -85,14 +89,12 @@ class MasterViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return dates.count
+        return contacts.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
-        
-        let date = dates[indexPath.row]
-        cell.textLabel?.text = date.description
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! ContactCell
+        cell.contact = contacts[indexPath.row]
         
         return cell
     }
@@ -103,21 +105,51 @@ class MasterViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            dates.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            (delegate as? DetailViewController)?.detailItem = nil
+            
+            
+            
         } else if editingStyle == .insert {
             
         }
     }
     
+    // MARK: - Table view delegate
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedItem = dates[indexPath.row]
-        delegate?.itemSelected(selectedItem)
+        
+        // Call delegate and pass the item
         
         if let detailViewController = delegate as? DetailViewController {
             splitViewController?.showDetailViewController(detailViewController, sender: nil)
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 84
+    }
+    
+    // MARK: - Networking
+    
+    fileprivate func fetchContacts() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        Database
+            .database(url: FirebaseAPICredentials.dbURLString)
+            .reference()
+            .child("contacts")
+            .child(uid)
+            .observeSingleEvent(of: .value, with: { snapshot in
+                guard let dictionaries = snapshot.value as? [String: Any] else { return }
+                dictionaries.forEach { key, value in
+                    guard let dictionary = value as? [String: Any] else { return }
+                    let contact = Contact(dictionary: dictionary)
+                    self.contacts.append(contact)
+                }
+                self.tableView.reloadData()
+            }, withCancel: { error in
+                print("Failed to fetch posts: \(error)")
+            })
+        
     }
 
 }

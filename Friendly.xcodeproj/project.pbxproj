@@ -19,6 +19,8 @@
 		733F643A2599B99600804A0A /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733F64392599B99600804A0A /* DetailViewController.swift */; };
 		733F643D2599B9CD00804A0A /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733F643C2599B9CD00804A0A /* UIView+.swift */; };
 		733F64412599BB7400804A0A /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733F64402599BB7400804A0A /* MasterViewController.swift */; };
+		7385AEBB259B2F18002E4413 /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7385AEBA259B2F18002E4413 /* ContactCell.swift */; };
+		7385AEBE259B38A6002E4413 /* RemoteImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7385AEBD259B38A6002E4413 /* RemoteImageView.swift */; };
 		73953C30259AFE1900850DB1 /* FirebaseAPICredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73953C2F259AFE1900850DB1 /* FirebaseAPICredentials.swift */; };
 		73953C33259B0AD600850DB1 /* NewContactController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73953C32259B0AD600850DB1 /* NewContactController.swift */; };
 		73953C37259B143300850DB1 /* UIViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73953C36259B143300850DB1 /* UIViewController+.swift */; };
@@ -39,6 +41,8 @@
 		733F64392599B99600804A0A /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		733F643C2599B9CD00804A0A /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		733F64402599BB7400804A0A /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
+		7385AEBA259B2F18002E4413 /* ContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
+		7385AEBD259B38A6002E4413 /* RemoteImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageView.swift; sourceTree = "<group>"; };
 		73953C2F259AFE1900850DB1 /* FirebaseAPICredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAPICredentials.swift; sourceTree = "<group>"; };
 		73953C32259B0AD600850DB1 /* NewContactController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NewContactController.swift; path = Friendly/NewContactController.swift; sourceTree = SOURCE_ROOT; };
 		73953C36259B143300850DB1 /* UIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+.swift"; sourceTree = "<group>"; };
@@ -83,6 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				733F64402599BB7400804A0A /* MasterViewController.swift */,
+				7385AEBA259B2F18002E4413 /* ContactCell.swift */,
 				733F64392599B99600804A0A /* DetailViewController.swift */,
 			);
 			path = "Master-Detail";
@@ -119,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				73953C32259B0AD600850DB1 /* NewContactController.swift */,
+				7385AEBD259B38A6002E4413 /* RemoteImageView.swift */,
 				73953C29259AFD5700850DB1 /* Firebase */,
 				73209BA92599FB3400149CCC /* App */,
 				73216ED9259AF549009F59F9 /* User Auth */,
@@ -283,8 +289,10 @@
 				73953C3A259B172700850DB1 /* Contact.swift in Sources */,
 				733F64222599B61F00804A0A /* AppDelegate.swift in Sources */,
 				733F64412599BB7400804A0A /* MasterViewController.swift in Sources */,
+				7385AEBB259B2F18002E4413 /* ContactCell.swift in Sources */,
 				733F64242599B61F00804A0A /* SceneDelegate.swift in Sources */,
 				73209BA22599F07A00149CCC /* SignupController.swift in Sources */,
+				7385AEBE259B38A6002E4413 /* RemoteImageView.swift in Sources */,
 				733F643A2599B99600804A0A /* DetailViewController.swift in Sources */,
 				73953C30259AFE1900850DB1 /* FirebaseAPICredentials.swift in Sources */,
 				73216ED7259AF544009F59F9 /* LoginController.swift in Sources */,

@@ -143,7 +143,7 @@ class NewContactController: UIViewController {
         guard let phoneNumber = phoneNumberTextField.text, phoneNumber.count > 0 else { return }
         
         guard let image = addPhotoButton.imageView?.image else { return }
-        guard let uploadData = image.jpegData(compressionQuality: 0.3) else { return }
+        guard let uploadData = image.jpegData(compressionQuality: 0.1) else { return }
         let imageFileName = UUID().uuidString
         
         // Root reference
@@ -222,7 +222,7 @@ extension NewContactController: UIImagePickerControllerDelegate, UINavigationCon
         addPhotoButton.layer.cornerRadius = addPhotoButton.frame.width / 2
         addPhotoButton.layer.masksToBounds = true
         addPhotoButton.layer.borderColor = UIColor.black.cgColor
-        addPhotoButton.layer.borderWidth = 3
+        addPhotoButton.layer.borderWidth = 1
         
         dismiss(animated: true, completion: nil)
     }
