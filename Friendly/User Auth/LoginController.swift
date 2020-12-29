@@ -85,6 +85,8 @@ class LoginController: UIViewController {
         Firebase.Auth.auth().signIn(withEmail: email, password: password, completion: { result, error in
             if let error = error {
                 print("Failed to sign in with email \(error)")
+                self.showBasicAlert(withTitle: "Failed to log in", message: error.localizedDescription)
+                return
             }
             print("Successfully logged in with user: \(result?.user.uid ?? "Unknown")")
             

@@ -119,6 +119,7 @@ class SignupController: UIViewController {
         Auth.auth().createUser(withEmail: email, password: password, completion: { result, error in
             if let error = error {
                 print("Failed to create user with error: \(error)")
+                self.showBasicAlert(withTitle: "Failed to sign up", message: error.localizedDescription)
                 return
             }
             print("Successfully created user.")
