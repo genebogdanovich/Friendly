@@ -83,6 +83,7 @@ class SignupController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.isNavigationBarHidden = true
         view.backgroundColor = .white
         configureLayout()
         
@@ -120,12 +121,32 @@ class SignupController: UIViewController {
                 return
             }
             print("Successfully created user.")
+            // Save username to DB
+            guard let uid = result?.user.uid else { return }
+            let dictionaryValues = ["username": username]
+            let values = [uid: dictionaryValues]
+            Database
+                .database(url: FirebaseAPICredentials.dbURLString)
+                .reference()
+                .child("users")
+                .updateChildValues(values, withCompletionBlock: { error, reference in
+                    if let error = error {
+                        print("Failed to save user info to db: \(error)")
+                        return
+                    }
+                    
+                    print("Successfully saved user info to db.")
+                    
+                    // TODO: Dismiss this VC.
+                
+            })
+            
             
         })
     }
     
     @objc fileprivate func handleAlreadyHaveAccount() {
-        
+        navigationController?.popViewController(animated: true)
     }
     
     
