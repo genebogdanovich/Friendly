@@ -15,6 +15,7 @@ class LoginController: UIViewController {
     let emailTextField: UITextField = {
         let view = UITextField()
         view.placeholder = "Email"
+        view.keyboardType = .emailAddress
         view.autocapitalizationType = .none
         view.backgroundColor = UIColor(white: 0, alpha: 0.03)
         view.borderStyle = .roundedRect

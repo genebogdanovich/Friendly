@@ -17,6 +17,7 @@ class MasterViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Contacts"
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
         configureBarButtonItems()
         
@@ -44,9 +45,9 @@ class MasterViewController: UITableViewController {
     }
     
     @objc private func handleInsertNewObject() {
-        dates.insert(Date(), at: 0)
-        let indexPath = IndexPath(row: 0, section: 0)
-        self.tableView.insertRows(at: [indexPath], with: .automatic)
+        let newContactController = NewContactController()
+        let navController = UINavigationController(rootViewController: newContactController)
+        present(navController, animated: true, completion: nil)
     }
     
     // MARK: - Handle user actions
