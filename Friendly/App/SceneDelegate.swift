@@ -33,7 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             splitViewController.show(.primary)
         }
         
-        window?.rootViewController = UINavigationController(rootViewController: LoginController())
+        window?.rootViewController = splitViewController
         window?.makeKeyAndVisible()
     }
 }

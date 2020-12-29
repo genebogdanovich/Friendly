@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class LoginController: UIViewController {
     
@@ -77,6 +78,25 @@ class LoginController: UIViewController {
     }
     
     @objc fileprivate func handleLogin() {
+        guard let email = emailTextField.text else { return }
+        guard let password = passwordTextField.text else { return }
+        
+        Firebase.Auth.auth().signIn(withEmail: email, password: password, completion: { result, error in
+            if let error = error {
+                print("Failed to sign in with email \(error)")
+            }
+            print("Successfully logged in with user: \(result?.user.uid ?? "Unknown")")
+            
+            let keyWindow = UIApplication.shared.connectedScenes
+                .filter { $0.activationState == .foregroundActive }
+                .map { $0 as? UIWindowScene }
+                .compactMap { $0 }
+                .first?.windows
+                .filter { $0.isKeyWindow }.first
+            
+            // FIXME: This will cause `bad state` that needs to be reset.
+            self.dismiss(animated: true, completion: nil)
+        })
         
     }
     

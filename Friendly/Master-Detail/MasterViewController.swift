@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 private let cellID = "ITEM_CELL"
 
@@ -18,11 +19,26 @@ class MasterViewController: UITableViewController {
         super.viewDidLoad()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
         configureBarButtonItems()
+        
+        // Show login screen if the user is not logged in.
+        if Auth.auth().currentUser == nil {
+            print("User is not logged in.")
+            DispatchQueue.main.async {
+                let loginController = LoginController()
+                let navController = UINavigationController(rootViewController: loginController)
+                navController.modalPresentationStyle = .fullScreen
+                self.present(navController, animated: true, completion: nil)
+            }
+            return
+        } else {
+            print("User is logged in.")
+        }
+        
     }
     
     fileprivate func configureBarButtonItems() {
-        self.navigationItem.leftBarButtonItem = self.editButtonItem
-        
+        let moreButton = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(handleMore))
+        self.navigationItem.leftBarButtonItem = moreButton
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleInsertNewObject))
         self.navigationItem.rightBarButtonItem = addButton
     }
@@ -31,6 +47,32 @@ class MasterViewController: UITableViewController {
         dates.insert(Date(), at: 0)
         let indexPath = IndexPath(row: 0, section: 0)
         self.tableView.insertRows(at: [indexPath], with: .automatic)
+    }
+    
+    // MARK: - Handle user actions
+    
+    @objc fileprivate func handleMore() {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: "Log Out", style: .default, handler: { _ in
+            do {
+                try Auth.auth().signOut()
+                let loginController = LoginController()
+                let navController = UINavigationController(rootViewController: loginController)
+                navController.modalPresentationStyle = .fullScreen
+                self.present(navController, animated: true, completion: nil)
+            } catch let signoutError {
+                print("Failed to sign out: \(signoutError)")
+            }
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    // MARK: - Setting up layout
+    
+    fileprivate func configureLayout() {
+        // Setting up layout
     }
 
     // MARK: - Table view data source
