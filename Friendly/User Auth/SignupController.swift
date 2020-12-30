@@ -7,6 +7,7 @@
 
 import UIKit
 import Firebase
+import SwiftUI
 
 class SignupController: UIViewController {
     
@@ -53,10 +54,10 @@ class SignupController: UIViewController {
     let signupButton: UIButton = {
         let button = UIButton()
         button.setTitle("Sign Up", for: .normal)
-        button.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+        button.backgroundColor = UIColor(named: "PrimaryGrayedOut")
         button.layer.cornerRadius = 5
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(named: "ButtonText"), for: .normal)
         button.addTarget(self, action: #selector(handleSignup), for: .touchUpInside)
         
         return button
@@ -72,7 +73,7 @@ class SignupController: UIViewController {
         
         attributedTitle.append(NSMutableAttributedString(string: "Sign In", attributes: [
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
-            NSAttributedString.Key.foregroundColor: UIColor.rgb(red: 17, green: 155, blue: 247),
+            NSAttributedString.Key.foregroundColor: UIColor(named: "Primary")!,
         ]))
         
         button.setAttributedTitle(attributedTitle, for: .normal)
@@ -85,7 +86,7 @@ class SignupController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.isNavigationBarHidden = true
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.systemBackground
         configureLayout()
         
     }
@@ -102,10 +103,10 @@ class SignupController: UIViewController {
         
         if formIsValid {
             signupButton.isEnabled = true
-            signupButton.backgroundColor = UIColor.rgb(red: 17, green: 155, blue: 247)
+            signupButton.backgroundColor = UIColor(named: "Primary")
         } else {
             signupButton.isEnabled = false
-            signupButton.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+            signupButton.backgroundColor = UIColor(named: "PrimaryGrayedOut")
         }
         
     }
@@ -128,7 +129,7 @@ class SignupController: UIViewController {
             let dictionaryValues = ["username": username]
             let values = [uid: dictionaryValues]
             Database
-                .database(url: FirebaseAPICredentials.dbURLString)
+                .database(url: MyFirebaseCredentials.realtimeDatabaseURLString)
                 .reference()
                 .child("users")
                 .updateChildValues(values, withCompletionBlock: { error, reference in

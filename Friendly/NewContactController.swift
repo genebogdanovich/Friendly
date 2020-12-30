@@ -7,6 +7,7 @@
 
 import UIKit
 import Firebase
+import SwiftUI
 
 class NewContactController: UIViewController {
     
@@ -67,7 +68,7 @@ class NewContactController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.systemBackground
         title = "New Contact"
         configureBarButtonItems()
         configureLayout()
@@ -173,7 +174,7 @@ class NewContactController: UIViewController {
                 ] as [String: Any]
                 
                 let contactReference = Database
-                    .database(url: FirebaseAPICredentials.dbURLString)
+                    .database(url: MyFirebaseCredentials.realtimeDatabaseURLString)
                     .reference()
                     .child("contacts")
                     .child(uid)

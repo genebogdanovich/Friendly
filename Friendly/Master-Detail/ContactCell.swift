@@ -21,7 +21,8 @@ class ContactCell: UITableViewCell {
     
     var contactImageView: RemoteImageView = {
         let view = RemoteImageView()
-        
+        view.contentMode = .scaleAspectFill
+        view.clipsToBounds = true
         return view
     }()
     var contactNameLabel: UILabel = {
@@ -50,17 +51,24 @@ class ContactCell: UITableViewCell {
         addSubview(contactImageView)
         
         contactImageView.anchor(
-            top: topAnchor,
+            top: nil,
             right: nil,
-            bottom: bottomAnchor,
+            bottom: nil,
             left: leftAnchor,
-            paddingTop: 10,
+            paddingTop: 0,
             paddingRight: 0,
-            paddingBottom: 10,
+            paddingBottom: 0,
             paddingLeft: 10,
             width: 64,
             height: 64
         )
+        
+        contactImageView.layer.cornerRadius = 64 / 2
+        contactImageView.layer.masksToBounds = true
+        contactImageView.layer.borderColor = UIColor.black.cgColor
+        contactImageView.layer.borderWidth = 1
+        
+        contactImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
         addSubview(contactNameLabel)
         

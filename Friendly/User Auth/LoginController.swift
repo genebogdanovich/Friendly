@@ -7,6 +7,7 @@
 
 import UIKit
 import Firebase
+import SwiftUI
 
 class LoginController: UIViewController {
     
@@ -41,10 +42,10 @@ class LoginController: UIViewController {
     let loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("Log In", for: .normal)
-        button.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+        button.backgroundColor = UIColor(named: "PrimaryGrayedOut")
         button.layer.cornerRadius = 5
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(named: "ButtonText"), for: .normal)
         button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
         
         return button
@@ -60,7 +61,7 @@ class LoginController: UIViewController {
         
         attributedTitle.append(NSMutableAttributedString(string: "Sign Up", attributes: [
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
-            NSAttributedString.Key.foregroundColor: UIColor.rgb(red: 17, green: 155, blue: 247),
+            NSAttributedString.Key.foregroundColor: UIColor(named: "Primary")!,
         ]))
         
         button.setAttributedTitle(attributedTitle, for: .normal)
@@ -112,10 +113,10 @@ class LoginController: UIViewController {
         
         if formIsValid {
             loginButton.isEnabled = true
-            loginButton.backgroundColor = UIColor.rgb(red: 17, green: 155, blue: 247)
+            loginButton.backgroundColor = UIColor(named: "Primary")
         } else {
             loginButton.isEnabled = false
-            loginButton.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+            loginButton.backgroundColor = UIColor(named: "PrimaryGrayedOut")
         }
         
     }
@@ -124,7 +125,7 @@ class LoginController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.systemBackground
         navigationController?.isNavigationBarHidden = true
         configureLayout()
 

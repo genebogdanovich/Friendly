@@ -134,7 +134,7 @@ class MasterViewController: UITableViewController {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
         Database
-            .database(url: FirebaseAPICredentials.dbURLString)
+            .database(url: MyFirebaseCredentials.realtimeDatabaseURLString)
             .reference()
             .child("contacts")
             .child(uid)

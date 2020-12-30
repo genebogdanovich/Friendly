@@ -39,10 +39,7 @@ class RemoteImageView: UIImageView {
             DispatchQueue.main.async {
                 self.image = photoImage
                 
-                self.layer.cornerRadius = self.frame.width / 2
-                self.layer.masksToBounds = true
-                self.layer.borderColor = UIColor.black.cgColor
-                self.layer.borderWidth = 1
+                
             }
             
         }.resume()
