@@ -14,16 +14,16 @@ class LoginController: UIViewController {
     // MARK: - Views
     
     let emailTextField: UITextField = {
-        let view = UITextField()
-        view.placeholder = "Email"
-        view.keyboardType = .emailAddress
-        view.autocapitalizationType = .none
-        view.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        view.borderStyle = .roundedRect
-        view.font = UIFont.systemFont(ofSize: 14)
-        view.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
+        let field = UITextField()
+        field.placeholder = "Email"
+        field.keyboardType = .emailAddress
+        field.autocapitalizationType = .none
+        field.borderStyle = .roundedRect
+        field.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
         
-        return view
+        field.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
+        
+        return field
     }()
     
     let passwordTextField: UITextField = {
@@ -31,9 +31,9 @@ class LoginController: UIViewController {
         field.placeholder = "Password"
         field.isSecureTextEntry = true
         field.autocapitalizationType = .none
-        field.backgroundColor = UIColor(white: 0, alpha: 0.03)
         field.borderStyle = .roundedRect
-        field.font = UIFont.systemFont(ofSize: 14)
+        field.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
+        
         field.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         
         return field
@@ -42,10 +42,11 @@ class LoginController: UIViewController {
     let loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("Log In", for: .normal)
-        button.backgroundColor = UIColor(named: "PrimaryGrayedOut")
+        button.setTitleColor(UIColor(named: "ButtonTextColor"), for: .normal)
         button.layer.cornerRadius = 5
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.setTitleColor(UIColor(named: "ButtonText"), for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
+        button.layer.backgroundColor = UIColor(named: "InactiveButtonColor")?.cgColor
+        
         button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
         
         return button
@@ -56,12 +57,11 @@ class LoginController: UIViewController {
         
         let attributedTitle = NSMutableAttributedString(string: "Don't have an account? ", attributes: [
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
-            NSAttributedString.Key.foregroundColor: UIColor.lightGray,
         ])
         
         attributedTitle.append(NSMutableAttributedString(string: "Sign Up", attributes: [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
-            NSAttributedString.Key.foregroundColor: UIColor(named: "Primary")!,
+            NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14),
+            NSAttributedString.Key.foregroundColor: UIColor(named: "LightBlueColor")!,
         ]))
         
         button.setAttributedTitle(attributedTitle, for: .normal)
@@ -71,10 +71,19 @@ class LoginController: UIViewController {
         return button
     }()
     
+    // MARK: viewDidLoad
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.hideKeyboardWhenTappedAround()
+        view.backgroundColor = .systemBackground
+        navigationController?.isNavigationBarHidden = true
+        configureLayout()
+    }
+    
     // MARK: - Handling user actions
     
     @objc fileprivate func handleDontHaveAccount() {
-        print("handleDontHaveAccount")
         let signupController = SignupController()
         navigationController?.pushViewController(signupController, animated: true)
     }
@@ -83,25 +92,25 @@ class LoginController: UIViewController {
         guard let email = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
         
-        Firebase.Auth.auth().signIn(withEmail: email, password: password, completion: { result, error in
+        Firebase
+            .Auth
+            .auth()
+            .signIn(
+                withEmail: email,
+                password: password,
+                completion: { result, error in
+                    
             if let error = error {
-                print("Failed to sign in with email \(error)")
+                print("Failed to sign in with email \(error).")
                 self.showBasicAlert(withTitle: "Failed to log in", message: error.localizedDescription)
+                
                 return
             }
-            print("Successfully logged in with user: \(result?.user.uid ?? "Unknown")")
-            
-            let keyWindow = UIApplication.shared.connectedScenes
-                .filter { $0.activationState == .foregroundActive }
-                .map { $0 as? UIWindowScene }
-                .compactMap { $0 }
-                .first?.windows
-                .filter { $0.isKeyWindow }.first
-            
-            // FIXME: This will cause `bad state` that needs to be reset.
+            print("Successfully logged in with user: \(result?.user.uid ?? "Unknown user").")
+                    
+            // FIXME: Reset data from the previous user here.
             self.dismiss(animated: true, completion: nil)
         })
-        
     }
     
     @objc fileprivate func handleTextInputChange() {
@@ -110,26 +119,13 @@ class LoginController: UIViewController {
             emailTextField.text?.count ?? 0 > 0 &&
             isValidEmail(emailTextField.text ?? "") &&
             passwordTextField.text?.count ?? 0 > 0
-        
         if formIsValid {
             loginButton.isEnabled = true
-            loginButton.backgroundColor = UIColor(named: "Primary")
+            loginButton.backgroundColor = UIColor(named: "ButtonColor")
         } else {
             loginButton.isEnabled = false
-            loginButton.backgroundColor = UIColor(named: "PrimaryGrayedOut")
+            loginButton.backgroundColor = UIColor(named: "InactiveButtonColor")
         }
-        
-    }
-    
-    // MARK: viewDidLoad
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = UIColor.systemBackground
-        navigationController?.isNavigationBarHidden = true
-        configureLayout()
-
-        
     }
     
     // MARK: - Configure layout
@@ -140,22 +136,24 @@ class LoginController: UIViewController {
             passwordTextField,
             loginButton
         ])
+        
         stackView.axis = .vertical
         stackView.spacing = 10
         stackView.distribution = .fillEqually
         
         view.addSubview(stackView)
+        
         stackView.anchor(
-            top: view.topAnchor,
+            top: view.safeAreaLayoutGuide.topAnchor,
             right: view.rightAnchor,
             bottom: nil,
             left: view.leftAnchor,
             paddingTop: 40,
-            paddingRight: 40,
+            paddingRight: 20,
             paddingBottom: 0,
-            paddingLeft: 40,
+            paddingLeft: 20,
             width: 0,
-            height: 140
+            height: 150
         )
         
         view.addSubview(dontHaveAccountButton)
@@ -173,5 +171,4 @@ class LoginController: UIViewController {
             height: 50
         )
     }
-
 }

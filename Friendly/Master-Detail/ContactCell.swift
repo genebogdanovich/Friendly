@@ -23,11 +23,11 @@ class ContactCell: UITableViewCell {
         let view = RemoteImageView()
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
+        
         return view
     }()
     var contactNameLabel: UILabel = {
         let label = UILabel()
-        
         
         return label
     }()
@@ -38,7 +38,6 @@ class ContactCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         configureLayout()
-        
     }
     
     required init?(coder: NSCoder) {
@@ -65,9 +64,7 @@ class ContactCell: UITableViewCell {
         
         contactImageView.layer.cornerRadius = 64 / 2
         contactImageView.layer.masksToBounds = true
-        contactImageView.layer.borderColor = UIColor.black.cgColor
         contactImageView.layer.borderWidth = 1
-        
         contactImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
         addSubview(contactNameLabel)
@@ -85,18 +82,16 @@ class ContactCell: UITableViewCell {
             height: 0)
     }
     
-    // MARK: -- Setting up data
-    
     fileprivate func setupAttributedLabel() {
         guard let firstName = contact?.firstName else { return }
         guard let lastName = contact?.lastName else { return }
         
         let attributedText = NSMutableAttributedString(string: "\(firstName) ", attributes: [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: UIFont.labelFontSize)
         ])
         
         attributedText.append(NSMutableAttributedString(string: lastName, attributes: [
-            NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)
+            NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)
         ]))
         
         self.contactNameLabel.attributedText = attributedText

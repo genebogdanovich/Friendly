@@ -95,13 +95,13 @@
 			path = "Master-Detail";
 			sourceTree = "<group>";
 		};
-		73216ED9259AF549009F59F9 /* User Auth */ = {
+		73216ED9259AF549009F59F9 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
-				73209BA12599F07A00149CCC /* SignupController.swift */,
 				73216ED6259AF544009F59F9 /* LoginController.swift */,
+				73209BA12599F07A00149CCC /* SignupController.swift */,
 			);
-			path = "User Auth";
+			path = Authentication;
 			sourceTree = "<group>";
 		};
 		733F64152599B61F00804A0A = {
@@ -126,17 +126,17 @@
 			isa = PBXGroup;
 			children = (
 				73209BA92599FB3400149CCC /* App */,
-				73953C32259B0AD600850DB1 /* NewContactController.swift */,
-				7385AEBD259B38A6002E4413 /* RemoteImageView.swift */,
+				73953C3C259B172D00850DB1 /* Models */,
 				73953C29259AFD5700850DB1 /* Firebase */,
-				73216ED9259AF549009F59F9 /* User Auth */,
+				73216ED9259AF549009F59F9 /* Authentication */,
 				73209BAB2599FB4000149CCC /* Master-Detail */,
+				73953C32259B0AD600850DB1 /* NewContactController.swift */,
+				73EACF36259CA313007AC45A /* Utilities */,
 				73209BA82599FB1A00149CCC /* Extensions */,
 				733F642A2599B62200804A0A /* Assets.xcassets */,
 				733F642C2599B62200804A0A /* LaunchScreen.storyboard */,
 				73209BAD2599FDC400149CCC /* GoogleService-Info.plist */,
 				733F642F2599B62200804A0A /* Info.plist */,
-				73953C3C259B172D00850DB1 /* Models */,
 			);
 			path = Friendly;
 			sourceTree = "<group>";
@@ -156,6 +156,14 @@
 				73953C39259B172700850DB1 /* Contact.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		73EACF36259CA313007AC45A /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				7385AEBD259B38A6002E4413 /* RemoteImageView.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		9D224A669585129490341BFF /* Frameworks */ = {

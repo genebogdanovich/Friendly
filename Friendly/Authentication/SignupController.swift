@@ -7,32 +7,31 @@
 
 import UIKit
 import Firebase
-import SwiftUI
 
 class SignupController: UIViewController {
     
     // MARK: - Views
     
     let emailTextField: UITextField = {
-        let view = UITextField()
-        view.placeholder = "Email"
-        view.keyboardType = .emailAddress
-        view.autocapitalizationType = .none
-        view.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        view.borderStyle = .roundedRect
-        view.font = UIFont.systemFont(ofSize: 14)
-        view.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
+        let field = UITextField()
+        field.placeholder = "Email"
+        field.keyboardType = .emailAddress
+        field.autocapitalizationType = .none
+        field.borderStyle = .roundedRect
+        field.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
         
-        return view
+        field.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
+        
+        return field
     }()
     
     let usernameTextField: UITextField = {
         let view = UITextField()
         view.placeholder = "Username"
         view.autocapitalizationType = .none
-        view.backgroundColor = UIColor(white: 0, alpha: 0.03)
         view.borderStyle = .roundedRect
-        view.font = UIFont.systemFont(ofSize: 14)
+        view.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
+        
         view.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         
         return view
@@ -43,9 +42,9 @@ class SignupController: UIViewController {
         field.placeholder = "Password"
         field.isSecureTextEntry = true
         field.autocapitalizationType = .none
-        field.backgroundColor = UIColor(white: 0, alpha: 0.03)
         field.borderStyle = .roundedRect
-        field.font = UIFont.systemFont(ofSize: 14)
+        field.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
+        
         field.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         
         return field
@@ -54,10 +53,11 @@ class SignupController: UIViewController {
     let signupButton: UIButton = {
         let button = UIButton()
         button.setTitle("Sign Up", for: .normal)
-        button.backgroundColor = UIColor(named: "PrimaryGrayedOut")
+        button.setTitleColor(UIColor(named: "ButtonTextColor"), for: .normal)
+        button.layer.backgroundColor = UIColor(named: "InactiveButtonColor")?.cgColor
         button.layer.cornerRadius = 5
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.setTitleColor(UIColor(named: "ButtonText"), for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
+        
         button.addTarget(self, action: #selector(handleSignup), for: .touchUpInside)
         
         return button
@@ -68,12 +68,11 @@ class SignupController: UIViewController {
         
         let attributedTitle = NSMutableAttributedString(string: "Already have an account? ", attributes: [
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
-            NSAttributedString.Key.foregroundColor: UIColor.lightGray,
         ])
         
         attributedTitle.append(NSMutableAttributedString(string: "Sign In", attributes: [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14),
-            NSAttributedString.Key.foregroundColor: UIColor(named: "Primary")!,
+            NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14),
+            NSAttributedString.Key.foregroundColor: UIColor(named: "LightBlueColor")!,
         ]))
         
         button.setAttributedTitle(attributedTitle, for: .normal)
@@ -83,12 +82,15 @@ class SignupController: UIViewController {
         return button
     }()
     
+    // MARK: - viewDidLoad
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.hideKeyboardWhenTappedAround()
+        view.backgroundColor = .systemBackground
         navigationController?.isNavigationBarHidden = true
-        view.backgroundColor = UIColor.systemBackground
-        configureLayout()
         
+        configureLayout()
     }
     
     // MARK: - Handling user actions
@@ -100,15 +102,13 @@ class SignupController: UIViewController {
             isValidEmail(emailTextField.text ?? "") &&
             usernameTextField.text?.count ?? 0 > 0 &&
             passwordTextField.text?.count ?? 0 > 0
-        
         if formIsValid {
             signupButton.isEnabled = true
-            signupButton.backgroundColor = UIColor(named: "Primary")
+            signupButton.layer.backgroundColor = UIColor(named: "ButtonColor")?.cgColor
         } else {
             signupButton.isEnabled = false
-            signupButton.backgroundColor = UIColor(named: "PrimaryGrayedOut")
+            signupButton.layer.backgroundColor = UIColor(named: "InactiveButtonColor")?.cgColor
         }
-        
     }
     
     @objc fileprivate func handleSignup() {
@@ -117,34 +117,38 @@ class SignupController: UIViewController {
         guard let username = usernameTextField.text, username.count > 0 else { return }
         guard let password = passwordTextField.text, password.count > 0 else { return }
         
-        Auth.auth().createUser(withEmail: email, password: password, completion: { result, error in
+        Auth
+            .auth()
+            .createUser(
+                withEmail: email,
+                password: password,
+                completion: { result, error in
             if let error = error {
-                print("Failed to create user with error: \(error)")
+                print("Failed to create user with error: \(error).")
                 self.showBasicAlert(withTitle: "Failed to sign up", message: error.localizedDescription)
                 return
             }
             print("Successfully created user.")
-            // Save username to DB
+                    
+            // Save username to database.
             guard let uid = result?.user.uid else { return }
             let dictionaryValues = ["username": username]
             let values = [uid: dictionaryValues]
+                    
             Database
                 .database(url: MyFirebaseCredentials.realtimeDatabaseURLString)
                 .reference()
                 .child("users")
                 .updateChildValues(values, withCompletionBlock: { error, reference in
                     if let error = error {
-                        print("Failed to save user info to db: \(error)")
+                        print("Failed to save user info to database: \(error).")
                         return
                     }
                     
-                    print("Successfully saved user info to db.")
+                    print("Successfully saved user info to database.")
                     
                     // TODO: Dismiss this VC.
-                
             })
-            
-            
         })
     }
     
@@ -152,11 +156,10 @@ class SignupController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
-    
     // MARK: - Configure layout
     
     fileprivate func configureLayout() {
-        // Input fields
+        
         let stackView = UIStackView(arrangedSubviews: [
             emailTextField,
             usernameTextField,

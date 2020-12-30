@@ -8,7 +8,7 @@
 import UIKit
 import Firebase
 
-private let cellID = "ITEM_CELL"
+private let cellID = "CELL_ID"
 
 class MasterViewController: UITableViewController {
     
@@ -19,13 +19,16 @@ class MasterViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         title = "Contacts"
         tableView.register(ContactCell.self, forCellReuseIdentifier: cellID)
+        // Removes extra lines on the bottom.
+        tableView.tableFooterView = UIView()
+        
         configureBarButtonItems()
         
         // Show login screen if the user is not logged in.
         if Auth.auth().currentUser == nil {
-            print("User is not logged in.")
             DispatchQueue.main.async {
                 let loginController = LoginController()
                 let navController = UINavigationController(rootViewController: loginController)
@@ -33,25 +36,9 @@ class MasterViewController: UITableViewController {
                 self.present(navController, animated: true, completion: nil)
             }
             return
-        } else {
-            print("User is logged in.")
         }
         
         fetchContacts()
-        
-    }
-    
-    fileprivate func configureBarButtonItems() {
-        let moreButton = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(handleMore))
-        self.navigationItem.leftBarButtonItem = moreButton
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleInsertNewObject))
-        self.navigationItem.rightBarButtonItem = addButton
-    }
-    
-    @objc private func handleInsertNewObject() {
-        let newContactController = NewContactController()
-        let navController = UINavigationController(rootViewController: newContactController)
-        present(navController, animated: true, completion: nil)
     }
     
     // MARK: - Handle user actions
@@ -66,7 +53,7 @@ class MasterViewController: UITableViewController {
                 navController.modalPresentationStyle = .fullScreen
                 self.present(navController, animated: true, completion: nil)
             } catch let signoutError {
-                print("Failed to sign out: \(signoutError)")
+                print("Failed to sign out: \(signoutError).")
             }
         }))
         
@@ -74,21 +61,33 @@ class MasterViewController: UITableViewController {
         present(alertController, animated: true, completion: nil)
     }
     
+    @objc private func handleInsertNewObject() {
+        let newContactController = NewContactController()
+        let navController = UINavigationController(rootViewController: newContactController)
+        present(navController, animated: true, completion: nil)
+    }
+    
     // MARK: - Setting up layout
     
     fileprivate func configureLayout() {
         // Setting up layout
     }
+    
+    fileprivate func configureBarButtonItems() {
+        let moreButton = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(handleMore))
+        self.navigationItem.leftBarButtonItem = moreButton
+        
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleInsertNewObject))
+        self.navigationItem.rightBarButtonItem = addButton
+    }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         return contacts.count
     }
     
@@ -105,11 +104,7 @@ class MasterViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            
-            
-            
         } else if editingStyle == .insert {
-            
         }
     }
     
@@ -117,7 +112,7 @@ class MasterViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        // Call delegate and pass the item
+        // Call delegate and pass the item.
         
         if let detailViewController = delegate as? DetailViewController {
             splitViewController?.showDetailViewController(detailViewController, sender: nil)
@@ -125,7 +120,7 @@ class MasterViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 84
+        return 100
     }
     
     // MARK: - Networking
@@ -149,10 +144,10 @@ class MasterViewController: UITableViewController {
             }, withCancel: { error in
                 print("Failed to fetch posts: \(error)")
             })
-        
     }
-
 }
+
+// MARK: - ItemSelectionDelegate
 
 protocol ItemSelectionDelegate: class {
     func itemSelected(_ newItem: Date)

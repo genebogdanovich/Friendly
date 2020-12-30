@@ -38,10 +38,7 @@ class RemoteImageView: UIImageView {
             
             DispatchQueue.main.async {
                 self.image = photoImage
-                
-                
             }
-            
         }.resume()
     }
 }

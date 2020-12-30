@@ -12,6 +12,7 @@ import SwiftUI
 class NewContactController: UIViewController {
     
     // MARK: - Views
+    
     let addPhotoButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "add_photo")?.withRenderingMode(.alwaysOriginal), for: .normal)
@@ -21,58 +22,53 @@ class NewContactController: UIViewController {
     }()
     
     let firstNameTextField: UITextField = {
-        let view = UITextField()
-        view.placeholder = "First name"
+        let field = UITextField()
+        field.placeholder = "First name"
+        field.borderStyle = .roundedRect
+        field.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
         
-        view.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        view.borderStyle = .roundedRect
-        view.font = UIFont.systemFont(ofSize: 14)
-        
-        return view
+        return field
     }()
     
     let lastNameTextField: UITextField = {
-        let view = UITextField()
-        view.placeholder = "Last name"
+        let field = UITextField()
+        field.placeholder = "Last name"
+        field.borderStyle = .roundedRect
+        field.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
         
-        view.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        view.borderStyle = .roundedRect
-        view.font = UIFont.systemFont(ofSize: 14)
-        
-        return view
+        return field
     }()
     
     let emailTextField: UITextField = {
-        let view = UITextField()
-        view.autocapitalizationType = .none
-        view.placeholder = "Email"
-        view.keyboardType = .emailAddress
-        view.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        view.borderStyle = .roundedRect
-        view.font = UIFont.systemFont(ofSize: 14)
+        let field = UITextField()
+        field.autocapitalizationType = .none
+        field.placeholder = "Email"
+        field.keyboardType = .emailAddress
+        field.borderStyle = .roundedRect
+        field.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
         
-        return view
+        return field
     }()
     
     let phoneNumberTextField: UITextField = {
-        let view = UITextField()
-        view.placeholder = "Phone"
-        view.keyboardType = .phonePad
-        view.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        view.borderStyle = .roundedRect
-        view.font = UIFont.systemFont(ofSize: 14)
+        let field = UITextField()
+        field.placeholder = "Phone"
+        field.keyboardType = .phonePad
+        field.borderStyle = .roundedRect
+        field.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
         
-        return view
+        return field
     }()
     
+    // MARK: - viewDidLoad
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.systemBackground
+        self.hideKeyboardWhenTappedAround()
+        view.backgroundColor = .systemBackground
         title = "New Contact"
         configureBarButtonItems()
         configureLayout()
-        
     }
     
     // MARK: - Setting up layout
@@ -113,12 +109,12 @@ class NewContactController: UIViewController {
             right: view.rightAnchor,
             bottom: nil,
             left: view.leftAnchor,
-            paddingTop: 40,
-            paddingRight: 5,
+            paddingTop: 20,
+            paddingRight: 10,
             paddingBottom: 0,
-            paddingLeft: 5,
+            paddingLeft: 10,
             width: 0,
-            height: 190
+            height: 200
         )
     }
     
@@ -134,8 +130,6 @@ class NewContactController: UIViewController {
     @objc fileprivate func handleCancel() {
         dismiss(animated: true, completion: nil)
     }
-    
-    
     
     @objc fileprivate func handleDone() {
         guard let firstName = firstNameTextField.text, firstName.count > 0 else { return }
@@ -222,7 +216,7 @@ extension NewContactController: UIImagePickerControllerDelegate, UINavigationCon
         
         addPhotoButton.layer.cornerRadius = addPhotoButton.frame.width / 2
         addPhotoButton.layer.masksToBounds = true
-        addPhotoButton.layer.borderColor = UIColor.black.cgColor
+        
         addPhotoButton.layer.borderWidth = 1
         
         dismiss(animated: true, completion: nil)
