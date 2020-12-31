@@ -9,7 +9,7 @@ import UIKit
 import SwiftUI
 
 class DetailViewController: UIViewController {
-    var detailItem: Date? {
+    var detailItem: Contact? {
         didSet {
             updateUI()
         }
@@ -37,13 +37,14 @@ class DetailViewController: UIViewController {
     fileprivate func updateUI() {
         if let detail = detailItem {
             print("Updating UI.")
-            detailDescriptionLabel.text = detail.description
+            detailDescriptionLabel.text = detail.lastName
         }
     }
 }
 
-extension DetailViewController: ItemSelectionDelegate {
-    func itemSelected(_ newItem: Date) {
-        detailItem = newItem
+extension DetailViewController: MasterViewControllerDelegate {
+    
+    func masterViewController(didSelectContact contact: Contact) {
+        detailItem = contact
     }
 }

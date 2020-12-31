@@ -87,11 +87,11 @@ class ContactCell: UITableViewCell {
         guard let lastName = contact?.lastName else { return }
         
         let attributedText = NSMutableAttributedString(string: "\(firstName) ", attributes: [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: UIFont.labelFontSize)
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
         ])
         
         attributedText.append(NSMutableAttributedString(string: lastName, attributes: [
-            NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)
+            NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
         ]))
         
         self.contactNameLabel.attributedText = attributedText

@@ -23,6 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let masterViewController = MasterViewController()
         let detailViewController = DetailViewController()
         masterViewController.delegate = detailViewController
+        
         let masterNavController = UINavigationController(rootViewController: masterViewController)
         let detailNavController = UINavigationController(rootViewController: detailViewController)
         

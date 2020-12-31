@@ -11,6 +11,8 @@ import SwiftUI
 
 class NewContactController: UIViewController {
     
+    weak var delegate: NewContactControllerDelegate?
+    
     // MARK: - Views
     
     let addPhotoButton: UIButton = {
@@ -138,59 +140,42 @@ class NewContactController: UIViewController {
         guard let phoneNumber = phoneNumberTextField.text, phoneNumber.count > 0 else { return }
         
         guard let image = addPhotoButton.imageView?.image else { return }
-        guard let uploadData = image.jpegData(compressionQuality: 0.1) else { return }
-        let imageFileName = UUID().uuidString
         
-        // Root reference
-        let storageReference = Storage.storage().reference()
-        // Reference to file
-        let imageReference = storageReference.child("contact_avatars").child(imageFileName)
-        
-        imageReference.putData(uploadData, metadata: nil, completion: { metadata, error in
+        Storage.saveContactAvatarToStorage(image: image, completion: { url, error in
             if let error = error {
-                print("Failed to upload contact avatar: \(error)")
+                print("Failed to save image to storage: \(error).")
+                return
             }
             
-            imageReference.downloadURL(completion: { url, error in
-                guard let downloadURL = url else { return }
-                guard let uid = Auth.auth().currentUser?.uid else { return }
-                
-                let values = [
-                    "firstName": firstName,
-                    "lastName": lastName,
-                    "emailAddress": emailAddress,
-                    "phoneNumber": phoneNumber,
-                    "avatarURL": downloadURL.absoluteString,
-                    "avatarImageWidth": image.size.width,
-                    "avatarImageHeight": image.size.height,
-                    "creationDate": Date().timeIntervalSince1970,
-                    
-                ] as [String: Any]
-                
-                let contactReference = Database
-                    .database(url: MyFirebaseCredentials.realtimeDatabaseURLString)
-                    .reference()
-                    .child("contacts")
-                    .child(uid)
-                
-                let reference = contactReference.childByAutoId()
-                
-                reference.updateChildValues(values) { error, reference in
-                    if let error = error {
-                        print("Failed to save contact to DB: \(error)")
-                        return
-                    }
-                    print("Successfully saved contact to DB.")
-                    self.dismiss(animated: true, completion: nil)
-                    
+            guard let downloadURL = url else { return }
+            
+            let values = [
+                "firstName": firstName,
+                "lastName": lastName,
+                "emailAddress": emailAddress,
+                "phoneNumber": phoneNumber,
+                "avatarURL": downloadURL.absoluteString,
+                "avatarImageWidth": image.size.width,
+                "avatarImageHeight": image.size.height,
+                "creationDate": Date().timeIntervalSince1970,
+            ] as [String: Any]
+            
+            Database.saveContactInfoToDatabase(info: values, completion: { reference, error in
+                if let error = error {
+                    print("Failed to save contact to database: \(error).")
+                    return
                 }
                 
+                print("Successfully saved contact info to database.")
+                
+                guard let uid = reference?.key else { return }
+                
+                let newContact = Contact(uid: uid, dictionary: values)
+                
+                self.delegate?.newContactController(didAddNewContact: newContact)
                 
             })
-            
         })
-        
-        
         
         dismiss(animated: true, completion: nil)
     }
@@ -221,4 +206,10 @@ extension NewContactController: UIImagePickerControllerDelegate, UINavigationCon
         
         dismiss(animated: true, completion: nil)
     }
+}
+
+// MARK: NewContactControllerDelegate
+
+protocol NewContactControllerDelegate: class {
+    func newContactController(didAddNewContact contact: Contact)
 }

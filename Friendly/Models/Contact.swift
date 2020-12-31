@@ -13,12 +13,23 @@ struct Contact {
     let emailAddress: String
     let phoneNumber: String
     let avatarURL: String
+    let uid: String
     
-    init(dictionary: [String: Any]) {
+    init(uid: String, dictionary: [String: Any]) {
         self.firstName = dictionary["firstName"] as? String ?? ""
         self.lastName = dictionary["lastName"] as? String ?? ""
         self.emailAddress = dictionary["emailAddress"] as? String ?? ""
         self.phoneNumber = dictionary["phoneNumber"] as? String ?? ""
         self.avatarURL = dictionary["avatarURL"] as? String ?? ""
+        
+        self.uid = uid
+    }
+    
+    
+}
+
+extension Contact: Equatable {
+    static func ==(lhs: Contact, rhs: Contact) -> Bool {
+        return lhs.uid == rhs.uid
     }
 }

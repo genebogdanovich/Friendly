@@ -12,7 +12,7 @@ private let cellID = "CELL_ID"
 
 class MasterViewController: UITableViewController {
     
-    weak var delegate: ItemSelectionDelegate?
+    weak var delegate: MasterViewControllerDelegate?
     var contacts = [Contact]()
     
     // MARK: viewDidLoad
@@ -63,6 +63,7 @@ class MasterViewController: UITableViewController {
     
     @objc private func handleInsertNewObject() {
         let newContactController = NewContactController()
+        newContactController.delegate = self
         let navController = UINavigationController(rootViewController: newContactController)
         present(navController, animated: true, completion: nil)
     }
@@ -104,7 +105,19 @@ class MasterViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-        } else if editingStyle == .insert {
+            let contactToDelete = contacts[indexPath.row]
+            
+            Database.removeContactFromDatabase(contact: contactToDelete, completion: { error in
+                if let error = error {
+                    print("Failed to remove contact from database: \(error).")
+                    return
+                }
+                print("Successfully removed contact from database.")
+                self.contacts = self.contacts.filter { $0 != contactToDelete }
+                tableView.beginUpdates()
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                tableView.endUpdates()
+            })
         }
     }
     
@@ -112,7 +125,7 @@ class MasterViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        // Call delegate and pass the item.
+        delegate?.masterViewController(didSelectContact: contacts[indexPath.row])
         
         if let detailViewController = delegate as? DetailViewController {
             splitViewController?.showDetailViewController(detailViewController, sender: nil)
@@ -137,9 +150,15 @@ class MasterViewController: UITableViewController {
                 guard let dictionaries = snapshot.value as? [String: Any] else { return }
                 dictionaries.forEach { key, value in
                     guard let dictionary = value as? [String: Any] else { return }
-                    let contact = Contact(dictionary: dictionary)
+                    
+                    let contact = Contact(uid: key, dictionary: dictionary)
                     self.contacts.append(contact)
+                    
                 }
+                self.contacts.sort(by: { contact1, contact2 in
+                    return contact1.lastName.compare(contact2.lastName) == .orderedAscending
+                    
+                })
                 self.tableView.reloadData()
             }, withCancel: { error in
                 print("Failed to fetch posts: \(error)")
@@ -147,8 +166,29 @@ class MasterViewController: UITableViewController {
     }
 }
 
-// MARK: - ItemSelectionDelegate
+// MARK: - MasterViewControllerDelegate
 
-protocol ItemSelectionDelegate: class {
-    func itemSelected(_ newItem: Date)
+protocol MasterViewControllerDelegate: class {
+    func masterViewController(didSelectContact contact: Contact)
+}
+
+extension MasterViewController: NewContactControllerDelegate {
+    func newContactController(didAddNewContact contact: Contact) {
+        
+        contacts.append(contact)
+        
+        self.contacts.sort(by: { contact1, contact2 in
+            return contact1.lastName.compare(contact2.lastName) == .orderedAscending
+        })
+        
+        tableView.beginUpdates()
+        
+        if let index = contacts.firstIndex(of: contact) {
+            tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .fade)
+        } else {
+            tableView.reloadData()
+        }
+        
+        tableView.endUpdates()
+    }
 }

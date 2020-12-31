@@ -26,6 +26,7 @@
 		73953C37259B143300850DB1 /* UIViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73953C36259B143300850DB1 /* UIViewController+.swift */; };
 		73953C3A259B172700850DB1 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73953C39259B172700850DB1 /* Contact.swift */; };
 		73AC7383259B587F00F1E2DA /* Database+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AC7382259B587F00F1E2DA /* Database+.swift */; };
+		73B2A41C259DADAB002A9352 /* Storage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B2A41B259DADAB002A9352 /* Storage+.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,7 @@
 		73953C36259B143300850DB1 /* UIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+.swift"; sourceTree = "<group>"; };
 		73953C39259B172700850DB1 /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		73AC7382259B587F00F1E2DA /* Database+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Database+.swift"; sourceTree = "<group>"; };
+		73B2A41B259DADAB002A9352 /* Storage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Storage+.swift"; sourceTree = "<group>"; };
 		9005BE5F0A0460F092CA9B82 /* Pods-Friendly.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Friendly.debug.xcconfig"; path = "Target Support Files/Pods-Friendly/Pods-Friendly.debug.xcconfig"; sourceTree = "<group>"; };
 		AE218DA14172391AEDB0DCED /* Pods_Friendly.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Friendly.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D91ED8A95421C671D2248B35 /* Pods-Friendly.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Friendly.release.xcconfig"; path = "Target Support Files/Pods-Friendly/Pods-Friendly.release.xcconfig"; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 			children = (
 				73953C2F259AFE1900850DB1 /* MyFirebaseCredentials.swift */,
 				73AC7382259B587F00F1E2DA /* Database+.swift */,
+				73B2A41B259DADAB002A9352 /* Storage+.swift */,
 			);
 			path = Firebase;
 			sourceTree = "<group>";
@@ -306,6 +309,7 @@
 				7385AEBE259B38A6002E4413 /* RemoteImageView.swift in Sources */,
 				733F643A2599B99600804A0A /* DetailViewController.swift in Sources */,
 				73953C30259AFE1900850DB1 /* MyFirebaseCredentials.swift in Sources */,
+				73B2A41C259DADAB002A9352 /* Storage+.swift in Sources */,
 				73216ED7259AF544009F59F9 /* LoginController.swift in Sources */,
 				733F643D2599B9CD00804A0A /* UIView+.swift in Sources */,
 				73953C37259B143300850DB1 /* UIViewController+.swift in Sources */,
