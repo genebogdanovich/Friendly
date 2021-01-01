@@ -112,7 +112,7 @@ class SignupController: UIViewController {
     }
     
     @objc fileprivate func handleSignup() {
-        // FIXME: Refactor this out.
+        
         guard let email = emailTextField.text, email.count > 0, isValidEmail(email) else { return }
         guard let username = usernameTextField.text, username.count > 0 else { return }
         guard let password = passwordTextField.text, password.count > 0 else { return }
@@ -123,33 +123,32 @@ class SignupController: UIViewController {
                 withEmail: email,
                 password: password,
                 completion: { result, error in
-            if let error = error {
-                print("Failed to create user with error: \(error).")
-                self.showBasicAlert(withTitle: "Failed to sign up", message: error.localizedDescription)
-                return
-            }
-            print("Successfully created user.")
-                    
-            // Save username to database.
-            guard let uid = result?.user.uid else { return }
-            let dictionaryValues = ["username": username]
-            let values = [uid: dictionaryValues]
-                    
-            Database
-                .database(url: MyFirebaseCredentials.realtimeDatabaseURLString)
-                .reference()
-                .child("users")
-                .updateChildValues(values, withCompletionBlock: { error, reference in
                     if let error = error {
-                        print("Failed to save user info to database: \(error).")
+                        print("Failed to create user with error: \(error).")
+                        self.showBasicAlert(withTitle: "Failed to sign up", message: error.localizedDescription)
                         return
                     }
+                    print("Successfully created user.")
                     
-                    print("Successfully saved user info to database.")
+                    guard let uid = result?.user.uid else { return }
                     
-                    // TODO: Dismiss this VC.
-            })
-        })
+                    Database.save(username: username, forUID: uid) { (reference, error) in
+                        if let error = error {
+                            print("Failed to save username to database: \(error).")
+                            return
+                        }
+                        
+                        print("Successfully saved username to database.")
+                        
+                        // TODO: Dismiss this VC.
+                        
+                        // Cleaning up from the previous user
+                        let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate
+                        sceneDelegate?.configureViewControllers()
+                        
+                        self.dismiss(animated: true, completion: nil)
+                    }
+                })
     }
     
     @objc fileprivate func handleAlreadyHaveAccount() {
@@ -211,3 +210,5 @@ func isValidEmail(_ email: String) -> Bool {
     let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
     return emailPred.evaluate(with: email)
 }
+
+

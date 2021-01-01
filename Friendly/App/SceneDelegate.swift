@@ -17,6 +17,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         
+        configureViewControllers()
+        
+        window?.makeKeyAndVisible()
+    }
+    
+    func configureViewControllers() {
         let splitViewController = UISplitViewController(style: .doubleColumn)
         splitViewController.delegate = self
         
@@ -35,7 +41,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
         window?.rootViewController = splitViewController
-        window?.makeKeyAndVisible()
     }
 }
 

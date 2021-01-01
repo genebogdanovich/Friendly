@@ -35,7 +35,7 @@ extension Database {
         // Implement this method to get the dictionary out of the NewContactController.
     }
     
-    static func removeContactFromDatabase(contact: Contact, completion: @escaping (Error?) -> Void) {
+    static func removeContact(_ contact: Contact, completion: @escaping (Error?) -> Void) {
         guard let currentLoggedInUserID = Auth.auth().currentUser?.uid else { return }
         
         Database
@@ -87,5 +87,27 @@ extension Database {
                 return
                 
             })
+    }
+    
+    
+    static func save(username: String, forUID uid: String, completion: @escaping (DatabaseReference?, Error?) -> Void) {
+        
+        let dictionaryValues = ["username": username]
+        let values = [uid: dictionaryValues]
+        
+        Database
+            .database(url: MyFirebaseCredentials.realtimeDatabaseURLString)
+            .reference()
+            .child("users")
+            .updateChildValues(values) { (error, reference) in
+                if let error = error {
+                    completion(nil, error)
+                    return
+                }
+                
+                completion(reference, nil)
+                return
+            }
+        
     }
 }

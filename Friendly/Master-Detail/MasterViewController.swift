@@ -142,7 +142,7 @@ class MasterViewController: UITableViewController {
         if editingStyle == .delete {
             let contactToDelete = contacts[indexPath.row]
             
-            Database.removeContactFromDatabase(contact: contactToDelete, completion: { error in
+            Database.removeContact(contactToDelete, completion: { error in
                 if let error = error {
                     print("Failed to remove contact from database: \(error).")
                     return
