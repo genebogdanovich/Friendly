@@ -14,8 +14,22 @@ class MasterViewController: UITableViewController {
     
     weak var delegate: MasterViewControllerDelegate?
     var contacts = [Contact]()
+    var filteredContacts = [Contact]()
     
-    // MARK: viewDidLoad
+    var isSearchBarEmpty: Bool {
+        return searchController.searchBar.text?.isEmpty ?? true
+    }
+    
+    var isFiltering: Bool {
+        return searchController.isActive && !isSearchBarEmpty
+    }
+    
+    // MARK: - UISearchController
+    
+    let searchController = UISearchController(searchResultsController: nil)
+    
+    
+    // MARK: - viewDidLoad
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +53,15 @@ class MasterViewController: UITableViewController {
         }
         
         fetchContacts()
+        
+        // UISearchController
+        
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search"
+        navigationItem.searchController = searchController
+        // By setting definesPresentationContext on your view controller to true, you ensure that the search bar doesn’t remain on the screen if the user navigates to another view controller while the UISearchController is active.
+        definesPresentationContext = true
     }
     
     // MARK: - Handle user actions
@@ -89,12 +112,24 @@ class MasterViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return contacts.count
+        if isFiltering {
+            return filteredContacts.count
+        } else {
+            return contacts.count
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! ContactCell
-        cell.contact = contacts[indexPath.row]
+        let contact: Contact
+        
+        if isFiltering {
+            contact = filteredContacts[indexPath.row]
+        } else {
+            contact = contacts[indexPath.row]
+        }
+        
+        cell.contact = contact
         
         return cell
     }
@@ -125,7 +160,15 @@ class MasterViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        delegate?.masterViewController(didSelectContact: contacts[indexPath.row])
+        let contact: Contact
+        
+        if isFiltering {
+            contact = filteredContacts[indexPath.row]
+        } else {
+            contact = contacts[indexPath.row]
+        }
+        
+        delegate?.masterViewController(didSelectContact: contact)
         
         if let detailViewController = delegate as? DetailViewController {
             splitViewController?.showDetailViewController(detailViewController, sender: nil)
@@ -137,7 +180,7 @@ class MasterViewController: UITableViewController {
     }
     
     // MARK: - Networking
-    
+    // FIXME: Refactor this out.
     fileprivate func fetchContacts() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
@@ -163,6 +206,16 @@ class MasterViewController: UITableViewController {
             }, withCancel: { error in
                 print("Failed to fetch posts: \(error)")
             })
+    }
+    
+    
+    // MARK: - Filtering
+    fileprivate func filterContentForSearchText(_ searchText: String) {
+        filteredContacts = contacts.filter { (contact: Contact) -> Bool in
+            return contact.fullName.lowercased().contains(searchText.lowercased())
+        }
+        
+        tableView.reloadData()
     }
 }
 
@@ -190,5 +243,14 @@ extension MasterViewController: NewContactControllerDelegate {
         }
         
         tableView.endUpdates()
+    }
+}
+
+// MARK: - UISearchResultsUpdating
+
+extension MasterViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchBar = searchController.searchBar
+        filterContentForSearchText(searchBar.text!)
     }
 }

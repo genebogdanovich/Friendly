@@ -15,6 +15,10 @@ struct Contact {
     let avatarURL: String
     let uid: String
     
+    var fullName: String {
+        return "\(firstName) \(lastName)"
+    }
+    
     init(uid: String, dictionary: [String: Any]) {
         self.firstName = dictionary["firstName"] as? String ?? ""
         self.lastName = dictionary["lastName"] as? String ?? ""
