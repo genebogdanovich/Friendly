@@ -50,10 +50,21 @@ extension Database {
                     return
                 }
             })
+        
+        Storage
+            .storage()
+            .reference()
+            .child("contact_avatars")
+            .child(avatarFileNameFrom(urlString: contact.avatarURL))
+            .delete { (error) in
+                if let error = error {
+                    completion(error)
+                    return
+                }
+            }
+        
         completion(nil)
         return
-        
-        // FIXME: Remove image!
     }
     
     static func fetchContacts(completion: @escaping ([String: Any]?, Error?) -> Void) {

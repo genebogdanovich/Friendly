@@ -34,3 +34,9 @@ extension Storage {
     }
 }
 
+func avatarFileNameFrom(urlString: String) -> String {
+    guard let urlComponents = URLComponents(string: urlString) else { return "" }
+    
+    return NSString(string: urlComponents.path).lastPathComponent
+}
+
