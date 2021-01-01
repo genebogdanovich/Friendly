@@ -180,34 +180,28 @@ class MasterViewController: UITableViewController {
     }
     
     // MARK: - Networking
-    // FIXME: Refactor this out.
     fileprivate func fetchContacts() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        Database
-            .database(url: MyFirebaseCredentials.realtimeDatabaseURLString)
-            .reference()
-            .child("contacts")
-            .child(uid)
-            .observeSingleEvent(of: .value, with: { snapshot in
-                guard let dictionaries = snapshot.value as? [String: Any] else { return }
-                dictionaries.forEach { key, value in
-                    guard let dictionary = value as? [String: Any] else { return }
-                    
-                    let contact = Contact(uid: key, dictionary: dictionary)
-                    self.contacts.append(contact)
-                    
-                }
-                self.contacts.sort(by: { contact1, contact2 in
-                    return contact1.lastName.compare(contact2.lastName) == .orderedAscending
-                    
-                })
-                self.tableView.reloadData()
-            }, withCancel: { error in
-                print("Failed to fetch posts: \(error)")
+        Database.fetchContacts { dictionaries, error in
+            if let error = error {
+                print("Failed to fetch contacts: \(error).")
+                self.showBasicAlert(withTitle: "Failed to fetch contacts", message: error.localizedDescription)
+            }
+            
+            guard let dictionaries = dictionaries else { return }
+            
+            dictionaries.forEach { key, value in
+                guard let dictionary = value as? [String: Any] else { return }
+                
+                let contact = Contact(uid: key, dictionary: dictionary)
+                self.contacts.append(contact)
+            }
+            self.contacts.sort(by: { contact1, contact2 in
+                return contact1.lastName.compare(contact2.lastName) == .orderedAscending
             })
+            self.tableView.reloadData()
+        }
     }
-    
     
     // MARK: - Filtering
     fileprivate func filterContentForSearchText(_ searchText: String) {
