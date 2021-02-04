@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import Combine
 
 extension Database {
     static func saveContactInfoToDatabase(info: [String: Any], completion: @escaping (DatabaseReference?, Error?) -> Void) {
@@ -87,6 +88,24 @@ extension Database {
                 return
                 
             })
+    }
+    
+    static func fetchContactsFuture() -> Future<[String: Any], Error> {
+        Future<[String: Any], Error> { promise in
+            guard let currentLoggedInUserID = Auth.auth().currentUser?.uid else { return }
+            
+            Database
+                .database(url: MyFirebaseCredentials.realtimeDatabaseURLString)
+                .reference()
+                .child("contacts")
+                .child(currentLoggedInUserID)
+                .observeSingleEvent(of: .value, with: { snapshot in
+                    guard let dictionaries = snapshot.value as? [String: Any] else { return }
+                    promise(.success(dictionaries))
+                }, withCancel: { error in
+                    promise(.failure(error))
+                })
+        }
     }
     
     

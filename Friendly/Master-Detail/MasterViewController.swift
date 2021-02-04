@@ -7,6 +7,7 @@
 
 import UIKit
 import Firebase
+import Combine
 
 private let cellID = "CELL_ID"
 
@@ -15,6 +16,7 @@ class MasterViewController: UITableViewController {
     weak var delegate: MasterViewControllerDelegate?
     var contacts = [Contact]()
     var filteredContacts = [Contact]()
+    var subscriptions = Set<AnyCancellable>()
     
     var isSearchBarEmpty: Bool {
         return searchController.searchBar.text?.isEmpty ?? true
@@ -52,7 +54,7 @@ class MasterViewController: UITableViewController {
             return
         }
         
-        fetchContacts()
+        fetchFutureContacts()
         
         // UISearchController
         
@@ -180,16 +182,22 @@ class MasterViewController: UITableViewController {
     }
     
     // MARK: - Networking
-    fileprivate func fetchContacts() {
+    
+    
+    fileprivate func fetchFutureContacts() {
+        let future = Database.fetchContactsFuture()
         
-        Database.fetchContacts { dictionaries, error in
-            if let error = error {
+        future.sink { (completion) in
+            print(completion)
+            
+            switch completion {
+            case .failure(let error):
                 print("Failed to fetch contacts: \(error).")
                 self.showBasicAlert(withTitle: "Failed to fetch contacts", message: error.localizedDescription)
+            case .finished:
+                print("Finished")
             }
-            
-            guard let dictionaries = dictionaries else { return }
-            
+        } receiveValue: { (dictionaries) in
             dictionaries.forEach { key, value in
                 guard let dictionary = value as? [String: Any] else { return }
                 
@@ -201,7 +209,31 @@ class MasterViewController: UITableViewController {
             })
             self.tableView.reloadData()
         }
+        .store(in: &subscriptions)
     }
+    
+    
+//    fileprivate func fetchContacts() {
+//        Database.fetchContacts { dictionaries, error in
+//            if let error = error {
+//                print("Failed to fetch contacts: \(error).")
+//                self.showBasicAlert(withTitle: "Failed to fetch contacts", message: error.localizedDescription)
+//            }
+//
+//            guard let dictionaries = dictionaries else { return }
+//
+//            dictionaries.forEach { key, value in
+//                guard let dictionary = value as? [String: Any] else { return }
+//
+//                let contact = Contact(uid: key, dictionary: dictionary)
+//                self.contacts.append(contact)
+//            }
+//            self.contacts.sort(by: { contact1, contact2 in
+//                return contact1.lastName.compare(contact2.lastName) == .orderedAscending
+//            })
+//            self.tableView.reloadData()
+//        }
+//    }
     
     // MARK: - Filtering
     fileprivate func filterContentForSearchText(_ searchText: String) {
